@@ -194,7 +194,12 @@
 	192,\
 	193,\
 	194,\
-	195
+	195,\
+	196,\
+	197,\
+	198,\
+	199,\
+	200
 
 #define FACTION_STRINGS \
 	"VANILLA - NATO", \
@@ -202,6 +207,11 @@
 	"VANILLA - FIA", \
 	"VANILLA - CSAT", \
 	"VANILLA - CSAT URBAN", \
+	"AFTERMATH - Jackals", \
+	"AFTERMATH - Kings", \
+	"AFTERMATH - NCR Army", \
+	"AFTERMATH - NCR Rangers", \
+	"AFTERMATH - Railroad", \
 	"APEX - NATO PACIFIC", \
 	"APEX - CTRG PACIFIC", \
 	"APEX - CSAT PACIFIC", \
