@@ -68,3 +68,27 @@ class AFTERMATH_RAILROAD_faction : FIA_faction
 		"Armored_Coat_02_body"
 	};
 };
+
+class AFTERMATH_ENCLAVE_faction : CSAT_faction
+{
+	displayName = "AFTERMATH - Enclave";
+
+	// infantry[] = {
+	// };
+};
+
+class AFTERMATH_CAESAR_faction : CSAT_faction
+{
+	displayName = "AFTERMATH - Caesar's Legion";
+
+	// infantry[] = {
+	// };
+};
+
+class AFTERMATH_BROTHERHOOD_faction : AAF_faction
+{
+	displayName = "AFTERMATH - Brotherhood of Steel";
+
+	// infantry[] = {
+	// };
+};

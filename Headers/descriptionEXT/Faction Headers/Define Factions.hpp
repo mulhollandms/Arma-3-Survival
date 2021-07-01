@@ -199,7 +199,10 @@
 	197,\
 	198,\
 	199,\
-	200
+	200,\
+	201,\
+	202,\
+	203
 
 #define FACTION_STRINGS \
 	"VANILLA - NATO", \
@@ -207,6 +210,9 @@
 	"VANILLA - FIA", \
 	"VANILLA - CSAT", \
 	"VANILLA - CSAT URBAN", \
+	"AFTERMATH - Brotherhood of Steel", \
+	"AFTERMATH - Caesar's Legion", \
+	"AFTERMATH - Enclave", \
 	"AFTERMATH - Jackals", \
 	"AFTERMATH - Kings", \
 	"AFTERMATH - NCR Army", \
