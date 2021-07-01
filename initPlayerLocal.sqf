@@ -1,6 +1,3 @@
-// dedicated server needs nothing here
-if (isDedicated) exitWith {};
-
 waitUntil {
 	if (missionNamespace getVariable ["BLWK_serverGlobalsInitialized",false]) exitWith {true};
     sleep 0.1;
@@ -31,6 +28,11 @@ private _startingKillPoints = ("BLWK_startingKillPoints" call BIS_fnc_getParamVa
 missionNamespace setVariable ["BLWK_playerKillPoints",_startingKillPoints];
 
 // adds starter items if selected (map, NVGs, pistol, etc.)
+waitUntil {
+	sleep 0.1;
+	!isNil "BLWK_uniformClass";
+};
+
 [_player] call BLWK_fnc_addPlayerItems;
 
 [_player] call BLWK_fnc_addDiaryEntries;
@@ -40,7 +42,7 @@ missionNamespace setVariable ["BLWK_playerKillPoints",_startingKillPoints];
 // vanilla mag repack
 if (BLWK_magRepackEnabled) then {
     waituntil {!isNull (findDisplay 46)};
-    
+
     (findDisplay 46) displayAddEventHandler ["KeyDown",{
 
         // passes the pressed key and whether or not a ctrl key is down. The proper combo is ctrl+R
@@ -57,7 +59,7 @@ sleep 0.25;
 _player switchMove ""; // set player standing
 
 // a loop that updates the info panel in the top left (respawn tickets, current wave #, points)
-null = [] spawn BLWK_fnc_infoPanelLoop;
+[] spawn BLWK_fnc_infoPanelLoop;
 
 // for preventing damage under certain cirumstances (friendly fire for one)
 // also revives the player if they go down with a medkit in inventory
@@ -65,7 +67,7 @@ null = [] spawn BLWK_fnc_infoPanelLoop;
 
 [_player] call BLWK_fnc_initDragSystem;
 
-null = [] spawn BLWK_fnc_playAreaEnforcementLoop;
+[false] call BLWK_fnc_playAreaEnforcementLoop;
 
 waitUntil {
     sleep 0.1;

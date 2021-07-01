@@ -16,17 +16,15 @@ Returns:
 
 Examples:
     (begin example)
-
 		[myControl] call BLWK_fnc_shop_purchaseForPool;
-
     (end)
 
 Author(s):
 	Ansible2 // Cipher
 ---------------------------------------------------------------------------- */
-params ["_control"];
-
 disableSerialization;
+
+params ["_control"];
 
 private _ctrlIDC = ctrlIDC _control;
 private _controlInfo = switch (_ctrlIDC) do {
@@ -54,7 +52,7 @@ if (_cost > _currentPlayerPoints) exitWith {
 	hint "You do not have enough for this item";
 };
 
-// this is the array index in either BLWK_buidlableObjects_classes or BLWK_supports_array
+// this is the array index or class name in either BLWK_supports_array or BLWK_buildableObjectsHash respectively
 private _data = _tvCtrl tvData _tvSelectedPath;
 // it is used when buying the item in BLWK_fnc_purchaseObject or BLWK_fnc_purchaseSupport
 

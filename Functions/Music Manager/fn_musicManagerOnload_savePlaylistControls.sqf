@@ -20,28 +20,30 @@ Examples:
 Author(s):
 	Ansible2 // Cipher
 ---------------------------------------------------------------------------- */
-#define SCRIPT_NAME "BLWK_fnc_musicManagerOnLoad_savePlaylistControls"
-scriptName SCRIPT_NAME;
+disableSerialization;
+scriptName "BLWK_fnc_musicManagerOnLoad_savePlaylistControls";
 
 params ["_saveButtonControl","_saveAsButtonControl"];
 
 _saveButtonControl ctrlAddEventHandler ["ButtonClick",{
-	params ["_control"];
-	
+	//params ["_control"];
+
 	// make sure a selection is made in the load drop down
 	private _loadComboControl = uiNamespace getVariable "BLWK_musicManager_control_loadCombo";
 	private _loadComboSelectedIndex = lbCurSel _loadComboControl;
-	
+
 	// if a selection has been made in the load playlist drop down AND it is not the DEFAULT entry
-	if (!(_loadComboSelectedIndex isEqualTo -1) AND {!(_loadComboSelectedIndex isEqualTo 0)}) then {
-		
+	if !(_loadComboSelectedIndex isEqualTo -1) then {
+
 		// make sure there is anything to overwrite the list with
 		if !(GET_PUBLIC_ARRAY_DEFAULT isEqualTo []) then {
 			private _savedPlaylistArray = profileNamespace getVariable ["BLWK_musicManagerPlaylists",[]];
 			private _playlistName = _loadComboControl lbText _loadComboSelectedIndex;
-			_savedPlaylistArray set [_loadComboSelectedIndex - 1,[_playlistName,BLWK_PUB_CURRENT_PLAYLIST]];
+			// creating a copy of BLWK_PUB_CURRENT_PLAYLIST as otherwise, any changes to BLWK_PUB_CURRENT_PLAYLIST after would
+			// directly go to the profileNamespace saved array
+			_savedPlaylistArray set [_loadComboSelectedIndex,[_playlistName,+BLWK_PUB_CURRENT_PLAYLIST]];
 			profileNamespace setVariable ["BLWK_musicManagerPlaylists",_savedPlaylistArray];
-			saveProfileNamespace;	
+			saveProfileNamespace;
 		} else {
 			hint (parseText "There are no entries in the Current Playlist.<br/>Save an empty list with Save As or Delete the list");
 		};
@@ -65,10 +67,13 @@ _saveAsButtonControl ctrlAddEventHandler ["ButtonClick",{
 		profileNamespace setVariable ["BLWK_musicManagerPlaylists",_savedPlaylistArray];
 		saveProfileNamespace;
 
-		null = [] spawn BLWK_fnc_musicManager_updateLoadCombo;
+		[] spawn BLWK_fnc_musicManager_updateLoadCombo;
 
 	} else {
 		hint "Playlists require at least one character for a name";
 	};
-	
+
 }];
+
+
+nil

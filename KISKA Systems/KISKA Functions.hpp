@@ -73,8 +73,14 @@ class KISKA
 		{};
 		class CAS
 		{};
+		class classTurretsWithGuns
+		{};
 		class deleteAtArray
 		{};
+		class detectControlKeys
+		{
+			preinit = 1;
+		};
 		class findConfigAny
 		{};
 		class findIfBool
@@ -87,11 +93,15 @@ class KISKA
 		{};
 		class log
 		{};
+		class paraTroopers
+		{};
 		class pushBackToArray
 		{};
 		class removeArsenal
 		{};
 		class setCrew
+		{};
+		class spawnVehicle
 		{};
 		class staticLine
 		{};

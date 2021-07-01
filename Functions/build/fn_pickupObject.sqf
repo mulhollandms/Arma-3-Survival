@@ -19,7 +19,7 @@ Returns:
 Examples:
     (begin example)
 
-		null = [myObject,player] spawn BLWK_fnc_pickupObject;
+		[myObject,player] spawn BLWK_fnc_pickupObject;
 
     (end)
 
@@ -39,14 +39,11 @@ params [
 	["_justPurchased",false,[true]]
 ];
 
-// get attachment info from global build objects array
-private _objectType = typeOf _object;
 
 if (_justPurchased) then {
-	private _index = BLWK_buidlableObjects_classes find (toLowerANSI _objectType);
-	private _attachmentInfo = (BLWK_buidlableObjects_properties select _index) select ATTACHMENT_INFO;
-	_object attachTo [_player,_attachmentInfo select ATTACH_ARRAY];
-	_object setDir (_attachmentInfo select ROTATION);
+	private _propertiesArray = BLWK_buildableObjectsHash get (toLowerANSI (typeOf _object));
+	_object attachTo [_player,_propertiesArray select ATTACHMENT_COORDS];
+	_object setDir (_propertiesArray select ROTATION);
 } else {
 	WAIT_FOR_OWNERSHIP(_object)
 	[_object,_player,true] call BIS_fnc_attachToRelative;
@@ -57,10 +54,10 @@ if (_object isEqualTo BLWK_randomWeaponBox AND {!(missionNamespace getVariable [
 	missionNamespace setVariable ["BLWK_randomWeaponBoxFound",true,true];
 };
 
-null = [_object] remoteExec ["BLWK_fnc_disableCollisionWithAllPlayers",_object];
+[_object] remoteExec ["BLWK_fnc_disableCollisionWithAllPlayers",_object];
 
 // make sure nobody else can manipulate the object through actions
-[_object,true] remoteExecCall ["BLWK_fnc_registerObjectPickup",BLWK_allClientsTargetId,true];
+[_object,true] remoteExecCall ["BLWK_fnc_registerObjectPickup",BLWK_allClientsTargetId,_object];
 
 // marks the client as holding an object for other functions such as trying to access the shop
 missionNamespace setVariable ["BLWK_heldObject",_object];
@@ -78,7 +75,12 @@ missionNamespace setVariable ["BLWK_heldObject",_object];
 	params ["_object","_player"];
 
 	waitUntil {
-		if (isNil "BLWK_heldObject" OR {!(alive _player)} OR {!(incapacitatedState _player isEqualTo "")} OR {_player getVariable ["ace_isUnconscious",false]}) exitWith {
+		if (
+			isNil "BLWK_heldObject" OR 
+			{!(alive _player)} OR 
+			{incapacitatedState _player isNotEqualTo ""} OR 
+			{_player getVariable ["ace_isUnconscious",false]}
+		) exitWith {
 			
 			// check to see if object was already dropped (if the fnc was already called, BLWK_heldObjectActionIDs will have been set to nil)
 			if (!isNil "BLWK_heldObjectActionIDs") then {

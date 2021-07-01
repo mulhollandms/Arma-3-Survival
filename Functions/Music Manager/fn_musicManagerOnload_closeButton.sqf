@@ -18,11 +18,14 @@ Examples:
 Author(s):
 	Ansible2 // Cipher
 ---------------------------------------------------------------------------- */
-#define SCRIPT_NAME "BLWK_fnc_musicManagerOnLoad_closeButton"
-scriptName SCRIPT_NAME;
+disableSerialization;
+scriptName "BLWK_fnc_musicManagerOnLoad_closeButton";
 
 params ["_control"];
 
 _control ctrlAddEventHandler ["ButtonClick",{
 	(uiNamespace getVariable "BLWK_musicManager_display") closeDisplay 2;
 }];
+
+
+nil

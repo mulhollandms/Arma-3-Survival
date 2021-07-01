@@ -15,9 +15,7 @@ Returns:
 
 Examples:
     (begin example)
-
 		[myObject] call BLWK_fnc_sellObject;
-
     (end)
 
 Author(s):
@@ -25,7 +23,8 @@ Author(s):
 ---------------------------------------------------------------------------- */
 params ["_object"];
 
-[_object] call BLWK_fnc_buildEvent_onSold;
+private _canSell = [_object] call BLWK_fnc_buildEvent_onSold;
+if !(_canSell) exitWith {};
 
 // check if someone is carrying the object
 private _attachedToObject = attachedTo _object;
@@ -38,12 +37,7 @@ if !(isNull _attachedToObject) then {
 	call BLWK_fnc_removePickedUpObjectActions;
 };
 
-private _objectType = typeOf _object;
-private _indexOfType = BLWK_buidlableObjects_classes find (toLowerANSI _objectType);
-
-// add the cost back to player's total
-private _price = (BLWK_buidlableObjects_properties select _indexOfType) select PRICE;
-
+private _price = (BLWK_buildableObjectsHash get (toLowerANSI (typeOf _object))) select PRICE;
 [_price] call BLWK_fnc_addPoints;
 
 deleteVehicle _object;

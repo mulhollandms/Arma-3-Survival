@@ -17,9 +17,7 @@ Returns:
 
 Examples:
     (begin example)
-
 		[_unitToDrag] call BLWK_fnc_dragUnitEvent;
-
     (end)
 
 Author(s):
@@ -31,11 +29,11 @@ if (!hasInterface) exitWith {};
 params ["_unitToDrag"];
 
 // set dragged units animations
-null = [_unitToDrag,"AinjPpneMrunSnonWnonDb_grab"] remoteExecCall ["switchMove",0,true];
+[_unitToDrag,"AinjPpneMrunSnonWnonDb_grab"] remoteExecCall ["switchMove",0,_unitToDrag];
 _unitToDrag attachTo [player,[0,1.2,0]];
-null = [_unitToDrag,180] remoteExecCall ["setDir",_unitToDrag];
+[_unitToDrag,180] remoteExecCall ["setDir",_unitToDrag];
 
-null = [_unitToDrag] remoteExec ["BLWK_fnc_handleReviveAfterDrag",_unitToDrag];
+[_unitToDrag] remoteExec ["BLWK_fnc_handleReviveAfterDrag",_unitToDrag];
 
 // set players animations
 player playAction "grabDrag";
@@ -51,7 +49,7 @@ missionNamespace setVariable ["BLWK_releaseDragActionId",_releaseActionId];
 
 
 // loop for certain conditions to auto drop the person being dragged
-null = [_unitToDrag] spawn {
+[_unitToDrag] spawn {
 	params ["_draggedUnit"];
 
 	private _conditionCheck = {
@@ -60,7 +58,7 @@ null = [_unitToDrag] spawn {
 		// if player died 
 		{!alive player} OR 
 		// if player was incapacitated
-		{!(incapacitatedState player isEqualTo "")} OR 
+		{(incapacitatedState player) isNotEqualTo ""} OR 
 		// if the dragged unit died
 		{!alive _draggedUnit} OR
 		// if the dragged unit was revived

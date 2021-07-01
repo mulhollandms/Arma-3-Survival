@@ -12,7 +12,7 @@ Parameters:
 	0: _object : <OBJECT> - The object being sold
 
 Returns:
-	NOTHING
+	<BOOL> - Can the item be sold
 
 Examples:
     (begin example)
@@ -31,13 +31,14 @@ params [
 
 if (isNull _object) exitWith {
 	["_object is a null object, exiting...",true] call KISKA_fnc_log;
+	false
 };
 
 
 private _code = getText(CONFIG_PATH >> (typeOf _object) >> "onSold");
-if (_code isEqualTo "") exitWith {};
+if (_code isEqualTo "") exitWith {true};
 
-call (compile _code);
+private _return = call (compile _code);
 
 
-nil
+_return

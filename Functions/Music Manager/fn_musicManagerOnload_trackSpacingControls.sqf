@@ -16,7 +16,7 @@ Returns:
 
 Examples:
     (begin example)
-		null = [
+		[
 			_comboControl,
 			_editBoxControl,
 			_buttonControl
@@ -26,15 +26,15 @@ Examples:
 Author(s):
 	Ansible2 // Cipher
 ---------------------------------------------------------------------------- */
-#define SCRIPT_NAME "BLWK_fnc_musicManagerOnLoad_trackSpacingControls"
-scriptName SCRIPT_NAME;
+disableSerialization;
+scriptName "BLWK_fnc_musicManagerOnLoad_trackSpacingControls";
 
 params ["_comboControl","_editBoxControl","_buttonControl"];
 
 // KISKA_fnc_getVariableTarget needs a scheduled environment
 if (!canSuspend) exitWith {
 	["Needs to be run in scheduled, now running in scheduled",true] call KISKA_fnc_log;
-	null = _this spawn BLWK_fnc_musicManagerOnLoad_trackSpacingControls;
+	_this spawn BLWK_fnc_musicManagerOnLoad_trackSpacingControls;
 };
 
 _comboControl ctrlSetFont "PuristaLight";
@@ -96,10 +96,10 @@ _buttonControl ctrlAddEventHandler ["ButtonClick",{
 	private _editControl = (uiNamespace getVariable "BLWK_musicManager_control_spacingEdit");
 	private _editControlText = ctrlText _editControl;
 	private _textCompiled = call compile _editControlText;
-	
+
 	if (
-		(_textCompiled isEqualType []) AND 
-		{!((count _textCompiled) isEqualTo 1) AND 
+		(_textCompiled isEqualType []) AND
+		{!((count _textCompiled) isEqualTo 1) AND
 		{!((count _textCompiled) isEqualTo 3) OR !(_textCompiled isEqualTypeParams [1,2,3])}}
 	) then {
 		hint "Format not accepted for track spacing!"
@@ -109,3 +109,6 @@ _buttonControl ctrlAddEventHandler ["ButtonClick",{
 		hint ("Track spacing set to " + (str _textCompiled));
 	};
 }];
+
+
+nil

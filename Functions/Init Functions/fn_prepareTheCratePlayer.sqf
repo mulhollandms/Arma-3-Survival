@@ -17,7 +17,7 @@ Returns:
 Examples:
     (begin example)
 
-		null = [] spawn BLWK_fnc_prepareTheCratePlayer;
+		[_crate] spawn BLWK_fnc_prepareTheCratePlayer;
 
     (end)
 
@@ -32,7 +32,7 @@ scriptName SCRIPT_NAME;
 
 if (!canSuspend) exitWith {
 	["Needs to executed in scheduled, now running in scheduled...",true] call KISKA_fnc_log;
-	null = [] spawn BLWK_fnc_prepareTheCratePlayer;
+	_this spawn BLWK_fnc_prepareTheCratePlayer;
 };
 
 params ["_mainCrate"];
@@ -45,14 +45,20 @@ waitUntil {
 	sleep 0.1;
 	!isNil "BLWK_pointsForHeal"
 };
+
+// hosted server will already have it defined
+if (isNil "BLWK_mainCrate") then {
+	BLWK_mainCrate = _mainCrate;
+};
+
 private _healString = ["<t color='#ff0000'>-- Heal Yourself ",BLWK_pointsForHeal,"p --</t>"] joinString "";
 [	
 	_mainCrate,
 	_healString, 
 	"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_revive_ca.paa", 
 	"\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_revive_ca.paa", 
-	"true", 
-	"true", 
+	"_this distance _target < 2", 
+	"_caller distance _target < 2", 
 	{}, 
 	{}, 
 	{
@@ -67,19 +73,7 @@ private _healString = ["<t color='#ff0000'>-- Heal Yourself ",BLWK_pointsForHeal
 	false
 ] call BIS_fnc_holdActionAdd;
 
-_mainCrate addAction [ 
-	"<t color='#00ff00'>-- Open Shop --</t>",  
-	{
-		call BLWK_fnc_openShop;
-	}, 
-	nil, 
-	1000,  
-	true,  
-	false,  
-	"", 
-	"", 
-	2.5 
-];
+[_mainCrate] call BLWK_fnc_addOpenShopAction;
 
 [_mainCrate] call BLWK_fnc_addBuildableObjectActions;
 
@@ -101,17 +95,11 @@ _mainCrate addEventHandler ["ContainerClosed",{
 }];
 
 
-// hosted server will already have it defined
-if (isNil "BLWK_mainCrate") then {
-	BLWK_mainCrate = _mainCrate;
-};
-
 addMissionEventHandler ["Draw3D",{
 	drawIcon3D ["", [1,1,1,0.70], (getPosATLVisual BLWK_mainCrate) vectorAdd [0, 0, 1.5], 1, 1, 0, "The Crate", 0, 0.04, "RobotoCondensed", "center", true];
 }];
 
 BLWK_mainCrate setVariable ["ace_cookoff_enable", false];
 
-if (isDamageAllowed BLWK_mainCrate) then {
-	BLWK_mainCrate allowDamage false;
-};
+
+[BLWK_mainCrate] call BLWK_fnc_addAllowDamageEH;

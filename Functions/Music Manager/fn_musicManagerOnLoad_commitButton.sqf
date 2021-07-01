@@ -19,18 +19,21 @@ Examples:
 Author(s):
 	Ansible2 // Cipher
 ---------------------------------------------------------------------------- */
-#define SCRIPT_NAME "BLWK_fnc_musicManagerOnLoad_commitButton"
-scriptName SCRIPT_NAME;
+disableSerialization;
+scriptName "BLWK_fnc_musicManagerOnLoad_commitButton";
 
 params ["_control"];
 
 _control ctrlAddEventHandler ["ButtonClick",{
 
 	if !(GET_PUBLIC_ARRAY_DEFAULT isEqualTo []) then {
-		null = remoteExecCall ["BLWK_fnc_musicManager_setPlaylistServer",2];
+		remoteExecCall ["BLWK_fnc_musicManager_setPlaylistServer",2];
 		hint "Playlist set on server";
 	} else {
 		hint "You can't commit an empty playlist";
 	};
 
 }];
+
+
+nil

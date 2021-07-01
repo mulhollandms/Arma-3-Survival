@@ -36,9 +36,9 @@ BLWK_animStateChangedEh_ID = _player addEventHandler ["AnimStateChanged",{
 	if (_anim == "unconsciousrevivedefault" AND 
 		{alive _unit} AND 
 		// if in some incapacitated state
-		{!(incapacitatedState _unit isEqualTo "")}
+		{(incapacitatedState _unit) isNotEqualTo ""}
 	) then {
-		null = [_unit] spawn BLWK_fnc_handleWaitingForReviveEvent;
+		[_unit] spawn BLWK_fnc_handleWaitingForReviveEvent;
 	};
 }];
 

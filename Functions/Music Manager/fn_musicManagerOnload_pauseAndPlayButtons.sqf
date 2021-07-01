@@ -19,14 +19,14 @@ Examples:
 Author(s):
 	Ansible2 // Cipher
 ---------------------------------------------------------------------------- */
-#define SCRIPT_NAME "BLWK_fnc_musicManagerOnLoad_pauseAndPlayButtons"
-scriptName SCRIPT_NAME;
+disableSerialization;
+scriptName "BLWK_fnc_musicManagerOnLoad_pauseAndPlayButtons";
 
 params ["_playButtonControl","_pauseButtonControl"];
 
 _playButtonControl ctrlAddEventHandler ["ButtonClick",{
 	params ["_control"];
-	
+
 	// if music is already playing
 	if !(uiNamespace getVariable ["BLWK_musicManager_doPlay",false]) then {
 		private _availableMusicListControl = uiNamespace getVariable "BLWK_musicManager_control_songsList";
@@ -35,18 +35,18 @@ _playButtonControl ctrlAddEventHandler ["ButtonClick",{
 		if (_selectedIndex isEqualTo -1) then {
 			hint "You need to have a selection made from the songs list";
 		} else {
-			
+
 			private _musicClass = _availableMusicListControl lnbData [_selectedIndex,0];
 			// if music is paused, start from slider position
 			if (uiNamespace getVariable ["BLWK_musicManager_paused",false]) then {
 				private _sliderPosition = sliderPosition (uiNamespace getVariable "BLWK_musicManager_control_timelineSlider");
-				null = [_musicClass,_sliderPosition] spawn BLWK_fnc_musicManager_playMusic;
+				[_musicClass,_sliderPosition] spawn BLWK_fnc_musicManager_playMusic;
 			} else {
-				null = [_musicClass] spawn BLWK_fnc_musicManager_playMusic;
+				[_musicClass] spawn BLWK_fnc_musicManager_playMusic;
 			};
 
 			uiNamespace setVariable ["BLWK_musicManager_doPlay",true];
-			null = [] spawn BLWK_fnc_musicManager_moveTimeline;
+			[] spawn BLWK_fnc_musicManager_moveTimeline;
 		};
 	};
 
@@ -63,3 +63,6 @@ _pauseButtonControl ctrlAddEventHandler ["ButtonClick",{
 	};
 
 }];
+
+
+nil

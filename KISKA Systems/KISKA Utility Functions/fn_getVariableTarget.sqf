@@ -13,11 +13,11 @@ Parameters:
 	3: _target : <NUMBER, OBJECT, GROUP, or STRING> - Where the _target is local will be where the variable is taken from
 
 Returns:
-	<ANY> - Whatever the variable is
+	<ANY> - Whatever the variable is, nil otherwise
 
 Examples:
     (begin example)
-		null = [] spawn {
+		[] spawn {
 			// need to call for direct return
 			_serversSomeVariable = ["someVariable",missionNamespace,"",2] call KISKA_fnc_getVariableTarget;
 		};
@@ -30,7 +30,7 @@ scriptName "KISKA_fnc_getVariableTarget";
 
 if (!canSuspend) exitWith {
 	["Must be run in scheduled environment",true] call KISKA_fnc_log;
-	-1
+	nil
 };
 
 params [
@@ -42,7 +42,7 @@ params [
 
 if (_variableName isEqualTo "") exitWith {
 	["_variableName is empty",true] call KISKA_fnc_log;
-	-1
+	nil
 };
 
 

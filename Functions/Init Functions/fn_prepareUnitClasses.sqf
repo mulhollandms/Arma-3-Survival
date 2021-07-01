@@ -46,10 +46,10 @@ scriptName SCRIPT_NAME;
 private _factionClasses = "true" configClasses (missionConfigFile >> "BLWK_factions");
 
 private _fn_exitForUndefinedDefault = {
-	null = [] spawn {
-		null = ["A default faction appears to be empty, the mission will now end to reconfigure parameters"] remoteExecCall ["BIS_fnc_error",0];
+	[] spawn {
+		["A default faction appears to be empty, the mission will now end to reconfigure parameters",true] remoteExecCall ["KISKA_fnc_log",0];
 		sleep 20;
-		call BIS_fnc_endMissionServer;
+		["UnitClassesErrorEnd"] call BIS_fnc_endMissionServer;
 	};
 };
 
@@ -67,6 +67,7 @@ private [
 	"_heavyGunshipClasses"
 ];
 // Sort a faction's units based upon what DLC is excluded and whether or not a unit class exists
+private _vehicleConfig = configFile >> "cfgVehicles";
 private _fn_sortFactionClasses = {
 	params ["_configToCheck"];
 
@@ -74,20 +75,20 @@ private _fn_sortFactionClasses = {
 	private _fn_sortArray = {
 		params ["_arrayToPushTo",["_pushToVehicle",true]];
 
-		if !(_sortArray isEqualTo []) then {
+		if (_sortArray isNotEqualTo []) then {
 			_sortArray apply {
-				if (isClass (configFile >> "cfgVehicles" >> _x)) then {
-					_arrayToPushTo pushBack _x;
+				if (isClass (_vehicleConfig >> _x)) then {
+					_arrayToPushTo pushBack (toLowerANSI _x);
 				};
 			};
+		};
 
-			if (_pushToVehicle) then {
-				_vehicleTypes pushBack _arrayToPushTo;
-			};
+		if (_pushToVehicle) then {
+			_vehicleTypes pushBack _arrayToPushTo;
 		};
 	};
 
-	
+
 	_infantryClasses = [];
 	_sortArray = [_configToCheck >> "infantry"] call BIS_fnc_getCfgDataArray;
 	[_infantryClasses,false] call _fn_sortArray;
@@ -96,11 +97,11 @@ private _fn_sortFactionClasses = {
 		[["Found no infantry classes in config ",_configToCheck],true] call KISKA_fnc_log;
 		[]
 	};
-		
+
 	_lighCarClasses = [];
 	_sortArray = [_configToCheck >> "lightCars"] call BIS_fnc_getCfgDataArray;
 	[_lighCarClasses] call _fn_sortArray;
-	
+
 	_heavyCarClasses = [];
 	_sortArray = [_configToCheck >> "heavyCars"] call BIS_fnc_getCfgDataArray;
 	[_heavyCarClasses] call _fn_sortArray;
@@ -154,15 +155,15 @@ private _fn_getSelectedClasses = {
 		[["Faction ",_factionString," was not found, going to default faction ",_defaultFactionString],true] call KISKA_fnc_log;
 		_goToDefaultFaction = true
 	};
-	
+
 	// default fall through faction if the selected is unavailable
 	if (_goToDefaultFaction) then {
 		private _doExit = false;
 		_factionIndex = _factionClasses findIf {getText(_x >> "displayName") == _defaultFactionString};
 		// if a faction is found
 		if (_factionIndex != -1) then {
-			_factionArray = [_factionClasses select _factionIndex] call _fn_sortFactionClasses;	
-			// if faction still came up empty	
+			_factionArray = [_factionClasses select _factionIndex] call _fn_sortFactionClasses;
+			// if faction still came up empty
 			if (_factionArray isEqualTo []) then {
 				_doExit = true;
 			};
